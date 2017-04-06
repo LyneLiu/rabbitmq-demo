@@ -33,7 +33,7 @@ public class RabbitmqDemoApplication implements CommandLineRunner {
 		while (true){
 			senderService.sendBar2Rabbitmq(new Bar(random.nextInt()));
 			senderService.sendFoo2Rabbitmq(new Foo(UUID.randomUUID().toString()));
-			Thread.sleep(10000);
+			Thread.sleep(2000);
 		}
 	}
 }
