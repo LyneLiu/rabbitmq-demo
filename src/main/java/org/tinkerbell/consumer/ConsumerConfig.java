@@ -13,6 +13,7 @@ import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.handler.annotation.support.DefaultMessageHandlerMethodFactory;
 
 /**
+ * @EnableRabbit和@Configuration启动@RabbitListener检测
  * Created by nn_liu on 2017/4/6.
  */
 @Configuration
