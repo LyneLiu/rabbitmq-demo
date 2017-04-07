@@ -1,11 +1,16 @@
 package org.tinkerbell.consumer;
 
 import org.springframework.amqp.core.AcknowledgeMode;
+import org.springframework.amqp.core.AnonymousQueue;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +25,9 @@ import org.springframework.messaging.handler.annotation.support.DefaultMessageHa
 @EnableRabbit
 public class ConsumerConfig implements RabbitListenerConfigurer {
 
+    @Autowired
+    private CachingConnectionFactory rabbitConnectionFactory;
+
     @Bean
     public DefaultMessageHandlerMethodFactory myHandlerMethodFactory() {
         DefaultMessageHandlerMethodFactory factory = new DefaultMessageHandlerMethodFactory();
@@ -31,7 +39,6 @@ public class ConsumerConfig implements RabbitListenerConfigurer {
     public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory) {
         SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
-        // factory.setPrefetchCount(5);
         factory.setAcknowledgeMode(AcknowledgeMode.AUTO);
         return factory;
     }

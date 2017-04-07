@@ -1,5 +1,7 @@
 package org.tinkerbell.producer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitMessagingTemplate;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -19,6 +21,8 @@ import javax.annotation.PostConstruct;
 @Component
 public class SenderService implements ReturnCallback,ConfirmCallback {
 
+    public static final Logger logger = LoggerFactory.getLogger(SenderService.class);
+
     @Autowired
     private RabbitTemplate rabbitMessagingTemplate;
 
@@ -27,12 +31,22 @@ public class SenderService implements ReturnCallback,ConfirmCallback {
         rabbitMessagingTemplate.setConfirmCallback(this);
     }
 
-    public void sendFoo2Rabbitmq(final Foo foo) {
+    public void sendFoo2Rabbitmq(final String foo) {
         this.rabbitMessagingTemplate.convertAndSend( "exchange","queue.foo", foo);
     }
 
-    public void sendBar2Rabbitmq(final Bar bar){
+    public void sendBar2Rabbitmq(final String bar){
         this.rabbitMessagingTemplate.convertAndSend("exchange","queue.bar", bar);
+    }
+
+    public void sendReturnCallback2MQ(final String returnMsg){
+        try {
+            String reply = this.rabbitMessagingTemplate.convertSendAndReceive("exchange","queue.foo",returnMsg).toString();
+            System.out.println(reply);
+        }catch (Exception e){
+            logger.error(e.getCause().toString());
+        }
+
     }
 
     @Override

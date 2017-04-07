@@ -11,6 +11,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.converter.MessageConverter;
 
 /**
  * Created by nn_liu on 2017/4/6.
@@ -37,8 +38,6 @@ public class ProducerConfig {
         return queue;
     }
 
-
-
     @Bean
     public TopicExchange exchange(RabbitAdmin rabbitAdmin) {
         TopicExchange topicExchange = new TopicExchange("exchange");
@@ -49,6 +48,7 @@ public class ProducerConfig {
     /**
      * Binding:Binding联系了Exchange与Message Queue。Exchange在与多个Message Queue发生Binding后会生成一张路由表，
      * 路由表中存储着Message Queue所需消息的限制条件即Binding Key。
+     *
      * @param queueFoo
      * @param exchange
      * @param rabbitAdmin
@@ -62,7 +62,7 @@ public class ProducerConfig {
     }
 
     @Bean
-    public Binding bindingExchangeBar(Queue queueBar, TopicExchange exchange,RabbitAdmin rabbitAdmin) {
+    public Binding bindingExchangeBar(Queue queueBar, TopicExchange exchange, RabbitAdmin rabbitAdmin) {
         Binding binding = BindingBuilder.bind(queueBar).to(exchange).with("queue.bar");
         rabbitAdmin.declareBinding(binding);
         return binding;
@@ -71,6 +71,7 @@ public class ProducerConfig {
 
     /**
      * 生产者用
+     *
      * @return
      */
     @Bean
@@ -82,7 +83,7 @@ public class ProducerConfig {
     }
 
     @Bean
-    public MappingJackson2MessageConverter jackson2Converter() {
+    public MessageConverter jackson2Converter() {
         MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
         return converter;
     }
