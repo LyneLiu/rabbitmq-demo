@@ -28,10 +28,11 @@ public class RabbitmqDemoApplication implements CommandLineRunner {
     @Override
     public void run(String... strings) throws Exception {
         Random random = new Random();
-        /*while (true) {
-            senderService.sendBar2Rabbitmq("bar-" + random.nextInt());
-            senderService.sendFoo2Rabbitmq("foo-" + UUID.randomUUID().toString());
+        while (true) {
+            /*senderService.sendBar2Rabbitmq("bar-" + random.nextInt());
+            senderService.sendFoo2Rabbitmq("foo-" + UUID.randomUUID().toString());*/
+            senderService.sendFoo2RabbitmqWithCallBack("foo-" + UUID.randomUUID().toString());
             Thread.sleep(1000);
-        }*/
+        }
     }
 }

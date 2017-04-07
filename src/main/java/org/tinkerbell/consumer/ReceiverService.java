@@ -1,15 +1,12 @@
 package org.tinkerbell.consumer;
 
-import com.rabbitmq.client.AMQP.BasicProperties;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.DefaultConsumer;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
-import org.tinkerbell.entiry.Bar;
-import org.tinkerbell.entiry.Foo;
 
 import java.io.IOException;
-import java.util.UUID;
 
 /**
  * @RabbitListener用于注册Listener时使用的信息：如queue，exchange，key、ListenerContainerFactory和RabbitAdmin的bean name.
@@ -22,14 +19,20 @@ import java.util.UUID;
 @Component
 public class ReceiverService {
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
     /**
      * RabbitListener: handle the message,such as write the data to DB again, send email to others to warn something.
      *
      * @param foo
      */
     @RabbitListener(queues = "queue.foo")
-    public void receiveFooQueue(String foo) throws IOException {
+    public String receiveFooQueue(String foo, @Header("foo_queue_header") String sendThread) throws IOException {
+
+        System.out.println("sender thead info:" + sendThread);
         System.out.println("Received Foo<" + foo + ">");
+        return "success";
     }
 
     @RabbitListener(queues = "queue.bar")

@@ -2,7 +2,9 @@ package org.tinkerbell.producer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.core.RabbitMessagingTemplate;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.core.RabbitTemplate.*;
@@ -32,6 +34,7 @@ public class SenderService implements ReturnCallback,ConfirmCallback {
     }
 
     public void sendFoo2Rabbitmq(final String foo) {
+
         this.rabbitMessagingTemplate.convertAndSend( "exchange","queue.foo", foo);
     }
 
@@ -39,14 +42,17 @@ public class SenderService implements ReturnCallback,ConfirmCallback {
         this.rabbitMessagingTemplate.convertAndSend("exchange","queue.bar", bar);
     }
 
-    public void sendReturnCallback2MQ(final String returnMsg){
-        try {
-            String reply = this.rabbitMessagingTemplate.convertSendAndReceive("exchange","queue.foo",returnMsg).toString();
-            System.out.println(reply);
-        }catch (Exception e){
-            logger.error(e.getCause().toString());
-        }
+    public void sendFoo2RabbitmqWithCallBack(final String foo){
 
+        Object response = rabbitMessagingTemplate.convertSendAndReceive("exchange", "queue.foo", foo, new MessagePostProcessor() {
+            @Override
+            public Message postProcessMessage(Message message) throws AmqpException {
+                /*设置当前消息的properties信息*/
+                message.getMessageProperties().setHeader("foo_queue_header", Thread.currentThread().getName().toString());
+                return message;
+            }
+        });
+        System.out.println(response.toString());
     }
 
     @Override
