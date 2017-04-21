@@ -25,9 +25,6 @@ import org.springframework.messaging.handler.annotation.support.DefaultMessageHa
 @EnableRabbit
 public class ConsumerConfig implements RabbitListenerConfigurer {
 
-    @Autowired
-    private CachingConnectionFactory rabbitConnectionFactory;
-
     @Bean
     public DefaultMessageHandlerMethodFactory myHandlerMethodFactory() {
         DefaultMessageHandlerMethodFactory factory = new DefaultMessageHandlerMethodFactory();

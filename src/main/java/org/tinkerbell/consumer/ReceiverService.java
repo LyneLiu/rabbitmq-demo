@@ -1,6 +1,10 @@
 package org.tinkerbell.consumer;
 
+import org.springframework.amqp.core.AmqpAdmin;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
@@ -22,6 +26,12 @@ public class ReceiverService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
+    @Autowired
+    private RabbitAdmin rabbitAdmin;
+
+    @Autowired
+    private CachingConnectionFactory rabbitConnectionFactory;
+
     /**
      * RabbitListener: handle the message,such as write the data to DB again, send email to others to warn something.
      *
@@ -40,5 +50,11 @@ public class ReceiverService {
         System.out.println("Received Bar<" + bar + ">");
     }
 
+
+    /*通过Template获取消息*/
+    public void receiveBarQueueWithTemplate(){
+        String receivedBar = (String) rabbitTemplate.receiveAndConvert("queue.bar");
+        System.out.println("receive msg:"+receivedBar);
+    }
 
 }
