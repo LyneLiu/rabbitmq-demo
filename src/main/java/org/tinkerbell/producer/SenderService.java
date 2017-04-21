@@ -43,8 +43,8 @@ public class SenderService implements ReturnCallback,ConfirmCallback {
     /**
      *
      * RabbitMQ实现延迟队列（http://blog.csdn.net/u010046908/article/details/57079566）
-     * 1、通过队列属性设置，队列中所有的消息都有相同的过期时间；
-     * 2、对消息单独设置，每条消息TTL可以不同。
+     * 1、通过队列属性设置，队列中所有的消息都有相同的过期时间（见README.md的参考信息）；
+     * 2、对消息单独设置，每条消息TTL可以不同（见message的属性设置）。
      * @param foo
      */
     public void sendFoo2RabbitmqWithCallBack(final String foo){
